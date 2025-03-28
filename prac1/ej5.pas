@@ -46,9 +46,6 @@ type
     phones_file = file of phone;
 
 
-
-
-
 procedure readPhone(var t: Text; var p: phone);
 begin
     readln(t, p.id, p.price, p.brand);
