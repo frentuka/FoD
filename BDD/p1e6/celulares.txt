@@ -1,0 +1,6 @@
+13  4.2999999999999998E+000    Brand
+140 100    description
+naaaame
+1  1.0000000000000000E+002 Samsung
+13548 1 8gb ram
+Galaxy S20

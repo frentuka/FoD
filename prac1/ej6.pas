@@ -1,4 +1,4 @@
-program ej5;
+program ej6;
 
 // 5. Realizar un programa para una tienda de celulares, que presente un menú con opciones para:
 
@@ -33,6 +33,17 @@ program ej5;
 //             y, en la tercera, nombre en ese orden.
 //             Cada celular se carga leyendo tres líneas del archivo “celulares.txt”.
 
+
+// 6. Agregar al menú del programa del ejercicio 5 opciones para:
+
+//     a. Añadir uno o más celulares al final del archivo
+//          con sus datos ingresados por teclado.
+
+//     b. Modificar el stock de un celular dado.
+
+//     c. Exportar el contenido del archivo binario a un archivo de texto denominado ”SinStock.txt”
+//          con aquellos celulares que tengan stock 0.
+
 const
     base_folder = 'BDD/p1e6/';
 
@@ -47,14 +58,14 @@ type
 
 function readPhone_console(line_prefix: string): phone;
 begin
-    writeln;
     writeln(line_prefix, 'Ingrese los datos del teléfono');
-    write(line_prefix, '      Marca > '); readln(readPhone_console.brand); writeln;
-    write(line_prefix, '     Nombre > '); readln(readPhone_console.name); writeln;
-    write(line_prefix, '         ID > '); readln(readPhone_console.id); writeln;
-    write(line_prefix, '     Precio > '); readln(readPhone_console.price); writeln;
-    write(line_prefix, ' Stock mín. > '); readln(readPhone_console.stock_min); writeln;
-    write(line_prefix, 'Stock disp. > '); readln(readPhone_console.stock_av); writeln;
+    write(line_prefix, '      Marca > '); readln(readPhone_console.brand);
+    write(line_prefix, '     Nombre > '); readln(readPhone_console.name);
+    write(line_prefix, 'Descripción > '); readln(readPhone_console.desc);
+    write(line_prefix, '         ID > '); readln(readPhone_console.id);
+    write(line_prefix, '     Precio > '); readln(readPhone_console.price);
+    write(line_prefix, ' Stock mín. > '); readln(readPhone_console.stock_min);
+    write(line_prefix, 'Stock disp. > '); readln(readPhone_console.stock_av);
 end;
 
 procedure readPhone(var t: Text; var p: phone);
@@ -75,11 +86,12 @@ end;
 
 var
     inp_str: string;
+    inp_int: integer;
+    found: boolean;
     bin_file: phones_file;
     txt_file: Text;
     tmp_phone: phone;
 begin
-    
 
     writeln;
     writeln('(A): Crear archivo binario | (B): Listar celulares en stock');
@@ -189,16 +201,111 @@ begin
             close(bin_file);
         end;
 
-        while (inp_str = 'A2') or (inp_str = 'a2') do begin
+        //////////
+        // ej 6 //
+        //////////
 
+        // a. Añadir uno o más celulares al final del archivo con sus datos ingresados por teclado.
+        if (inp_str = 'A2') or (inp_str = 'a2') then begin
+            writeln;
 
+            writeln('  Ingrese el nombre del archivo .bin a editar');
+            write('  > '); readln(inp_str);
 
+            assign(bin_file, base_folder + inp_str + '.bin');
+            reset(bin_file);
+
+            inp_str:= 'a2';
+            while ((inp_str = 'A2') or (inp_str = 'a2')) and (inp_str <> 'X') and (inp_str <> 'x') do begin
+                tmp_phone:= readPhone_console('  ');
+
+                while not eof(bin_file) do
+                    seek(bin_file, filepos(bin_file) + 1);
+
+                write(bin_file, tmp_phone);
+
+                writeln;
+                writeln('  (*): Agregar otro teléfono.');
+                writeln('  (X): Salir');
+                write('  > '); readln(inp_str);
+
+                if (inp_str <> 'X') and (inp_str <> 'x') then
+                    inp_str:= 'a2';
+            end;
+
+            close(bin_file);
+        end;
+
+        // b. Modificar el stock de un celular dado.
+        if (inp_str = 'B2') or (inp_str = 'b2') then begin
+            writeln;
+            writeln('  Ingrese el nombre del archivo .bin a editar');
+            write('  > '); readln(inp_str);
+
+            assign(bin_file, base_folder + inp_str + '.bin');
+            reset(bin_file);
+
+            writeln;
+            writeln('  Ingrese la ID de un teléfono');
+            write('  > '); readln(inp_int);
+
+            found:= false;
+            while not eof(bin_file) and not found do begin
+                read(bin_file, tmp_phone);
+                if (tmp_phone.id = inp_int) then begin
+                    found:= true;
+                    seek(bin_file, filepos(bin_file) - 1);
+
+                    writeln;
+                    writeln('  ! Teléfono encontrado. Indique nuevo stock:');
+                    write('  ', tmp_phone.stock_av ,' > '); readln(inp_int);
+
+                    tmp_phone.stock_av:= inp_int;
+                    write(bin_file, tmp_phone);
+                end;
+            end;
+
+            if not found then begin
+                writeln;
+                writeln('  ! No se ha encontrado el teléfono #', inp_int);
+            end;
+        end;
+
+        // c. Exportar el contenido del archivo binario a un archivo de texto denominado: ”SinStock.txt”
+        // con aquellos celulares que tengan stock 0.
+        if (inp_str = 'C2') or (inp_str = 'c2') then begin
+            writeln;
+            writeln('  Ingrese el nombre del archivo .bin');
+            write('  > '); readln(inp_str);
+
+            assign(bin_file, base_folder + inp_str + '.bin');
+            reset(bin_file);
+
+            assign(txt_file, base_folder + 'SinStock.txt');
+            rewrite(txt_file);
+
+            while not eof(bin_file) do begin
+                read(bin_file, tmp_phone);
+
+                if (tmp_phone.stock_av = 0) then begin
+                    writeln(txt_file, tmp_phone.id, ' ', tmp_phone.price, ' ', tmp_phone.brand);
+                    writeln(txt_file, tmp_phone.stock_av, ' ', tmp_phone.stock_min, ' ', tmp_phone.desc);
+                    writeln(txt_file, tmp_phone.name);
+                end;
+            end;
+
+            close(txt_file);
+            close(bin_file);
+
+            writeln;
+            writeln('  ! Teléfonos sin stock exportados correctamente');
         end;
 
         writeln;
-        writeln('(A): Crear y cargar un archivo | (B): Listar celulares en stock');
+        writeln('(A): Crear archivo binario | (B): Listar celulares en stock');
         writeln('(C): Buscar por descripción | (D): Exportar archivo inc. A');
-        writeln('(X): Salir');
+        writeln('(A2): Añadir celular | (B2): Modificar stock de un celular');
+        writeln('(C2): Exportar celulares sin stock | (X): Salir');
         write('> '); readln(inp_str);
     end;
 
