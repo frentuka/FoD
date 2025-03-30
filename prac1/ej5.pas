@@ -34,7 +34,7 @@ program ej5;
 //             Cada celular se carga leyendo tres líneas del archivo “celulares.txt”.
 
 const
-    base_folder = 'BDD\p1e5\';
+    base_folder = 'BDD/p1e5/';
 
 type
     phone = record
@@ -79,14 +79,14 @@ begin
     while (inp_str <> 'X') and (inp_str <> 'x') do begin
 
         while (inp_str = 'A') or (inp_str = 'a') do begin
-            writeln;
-            writeln('  Ingresa el nombre del archivo .bin a crear');
-            write('  > '); readln(inp_str);
-            
             // crear archivo de registros de celulares y cargarlo con datos ingresados desde el archivo 'celulares.txt'
             // asignar archivo binario
             assign(txt_file, base_folder + 'celulares.txt');
             reset(txt_file); // se dispone
+            
+            writeln;
+            writeln('  Ingresa el nombre del archivo .bin a crear');
+            write('  > '); readln(inp_str);
 
             // asignar archivo de texto
             assign(bin_file, base_folder + inp_str + '.bin');
@@ -152,6 +152,8 @@ begin
             writeln('  para exportarlo como un nuevo archivo "celulares.txt"');
             write('  > '); readln(inp_str);
 
+            writeln(base_folder + inp_str + '.bin');
+
             assign(bin_file, base_folder + inp_str + '.bin');
             reset(bin_file);
 
@@ -178,6 +180,7 @@ begin
         writeln;
         writeln('(A): Crear y cargar un archivo | (B): Listar celulares en stock');
         writeln('(C): Buscar por descripción | (D): Exportar archivo inc. A');
+        writeln('(X): Salir');
         write('> '); readln(inp_str);
     end;
 

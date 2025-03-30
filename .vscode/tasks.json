@@ -4,8 +4,8 @@
     "version": "2.0.0",
     "options": {
         "env": {
-                "TASK_COMPILE": "C:\\FPC\\3.2.2\\bin\\i386-win32\\fpc.exe ${file} -o${fileDirname}\\compiled\\${fileBasenameNoExtension}.exe",
-                "TASK_RUN": "${fileDirname}\\compiled\\${fileBasenameNoExtension}.exe",
+                "TASK_COMPILE": "fpc ${file} -o${fileDirname}/compiled/${fileBasenameNoExtension}.exe",
+                "TASK_RUN": "${fileDirname}/compiled/${fileBasenameNoExtension}.exe",
             }
     },
     "tasks": [
@@ -28,7 +28,7 @@
          "label": "PascalMkdir",
          "type": "shell",
          "command": "mkdir",
-         "args": ["${fileDirname}\\compiled"],
+         "args": ["${fileDirname}/compiled"],
          "presentation": {
             "reveal": "always",
             "panel": "new"
@@ -42,7 +42,7 @@
       {
          "label": "PascalCompile",
          "type": "shell",
-         "command": "C:\\Program Files\\FPC\\3.2.2\\bin\\i386-win32\\fpc.exe",
+         "command": "fpc",
          "presentation": {
             "reveal": "always",
             "panel": "new"
@@ -53,7 +53,7 @@
                "quoting": "escape"
             },
             {
-               "value": "-o${fileDirname}\\compiled\\${fileBasenameNoExtension}.exe",
+               "value": "-o${fileDirname}/compiled/",
                "quoting": "escape"
             }
          ],
@@ -75,7 +75,7 @@
       {
          "label": "PascalRun",
          "type": "shell",
-         "command": "${fileDirname}\\compiled\\${fileBasenameNoExtension}.exe",
+         "command": "${fileDirname}/compiled/${fileBasenameNoExtension}",
          "presentation": {
             "reveal": "always",
             "panel": "new"

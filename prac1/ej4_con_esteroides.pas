@@ -15,7 +15,7 @@ uses
     SysUtils;
 
 const
-    base_folder = 'BDD\';
+    base_folder = 'BDD\p1e4';
 
 type
     empleado = record
