@@ -1,4 +1,4 @@
-program ej2;
+program ej7;
 
 
     // Se dispone de un archivo con información de los alumnos de la Facultad de Informática.
@@ -79,7 +79,7 @@ begin
             read(file_m, tmp_alumno);
 
         // Realizar todas las operaciones "juntas"
-        while (tmp_alumno.codigo = tmp_alumno_d.codigo) do begin
+        while (tmp_alumno.codigo = tmp_alumno_d.codigo) and not eof(file_d) do begin
             // Operación
             if tmp_alumno_d.aprobo_final then begin
                 tmp_alumno.cant_mat_aprobadas:= tmp_alumno.cant_mat_aprobadas - 1;
